@@ -61,6 +61,22 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="motivo">Motivo do Contato</label>
+                    <select id="motivo" name="motivo" required>
+                        <option value="">Selecione...</option>
+                        <option value="freelance">Projeto Freelance</option>
+                        <option value="vaga">Oportunidade de Vaga</option>
+                        <option value="outro">Outro assunto</option>
+                    </select>
+                </div>
+
+                <!-- Este campo será manipulado via JavaScript (DOM) quando selecionar Vaga ou Freelance -->
+                <div class="form-group" id="div-detalhes" style="display: none;">
+                    <label for="detalhes-vaga">Detalhes (Empresa ou Projeto)</label>
+                    <input type="text" id="detalhes-vaga" name="detalhes-vaga" placeholder="Digite mais informações...">
+                </div>
+
+                <div class="form-group">
                     <label for="mensagem">Mensagem</label>
                     <textarea 
                         id="mensagem" 

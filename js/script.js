@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initFormValidation();
     initSmoothScroll();
     initBackToTop();
+    initDynamicForm();
+    initGreeting();
 });
 
 // ========================================
@@ -47,6 +49,36 @@ function highlightActiveNav() {
             link.classList.add('active');
         }
     });
+}
+
+// ========================================
+// MENSAGEM DINÂMICA (IF / ELSE e ARITMÉTICA)
+// ========================================
+function initGreeting() {
+    const heroTitle = document.querySelector('.hero-text h1');
+    if (!heroTitle) return;
+
+    const hour = new Date().getHours();
+    let greeting = "";
+
+    // Aula: Condicionais e if/else
+    if (hour >= 5 && hour < 12) {
+        greeting = "Bom dia";
+    } else if (hour >= 12 && hour < 18) {
+        greeting = "Boa tarde";
+    } else {
+        greeting = "Boa noite";
+    }
+
+    // Aula: Operadores Aritméticos
+    const startYear = 2023;
+    const currentYear = new Date().getFullYear();
+    const expYears = currentYear - startYear;
+
+    // Usando innerHTML para manipulação de DOM
+    heroTitle.innerHTML = `${greeting}! <br> Eu sou Raphael Del Rosse`;
+    
+    console.log(`Operador aritmético - Tempo de estudos de TI: ${expYears} anos.`);
 }
 
 // ========================================
@@ -175,14 +207,14 @@ function initFormValidation() {
     inputs.forEach(input => {
         input.addEventListener('blur', () => {
             if (input.value.trim() === '') {
-                input.style.borderColor = '#ef4444';
+                input.style.borderColor = '#ef4444'; // red erro
             } else {
-                input.style.borderColor = '#10b981';
+                input.style.borderColor = '#10b981'; // green ok
             }
         });
 
         input.addEventListener('focus', () => {
-            input.style.borderColor = '#f97316';
+            input.style.borderColor = 'var(--accent-red)';
         });
     });
 }
@@ -229,6 +261,26 @@ function showNotification(message, type) {
 }
 
 // ========================================
+// FORMULÁRIO DINÂMICO (MANIPULAÇÃO DE DOM)
+// ========================================
+function initDynamicForm() {
+    const motivoSelect = document.getElementById('motivo');
+    const divDetalhes = document.getElementById('div-detalhes');
+    
+    if(motivoSelect && divDetalhes) {
+        // Event listener dinâmico
+        motivoSelect.addEventListener('change', function() {
+            if(this.value === 'freelance' || this.value === 'vaga') {
+                divDetalhes.style.display = 'flex';
+                divDetalhes.style.animation = 'slideInRight 0.3s ease';
+            } else {
+                divDetalhes.style.display = 'none';
+            }
+        });
+    }
+}
+
+// ========================================
 // SMOOTH SCROLL - Rolagem suave
 // ========================================
 function initSmoothScroll() {
@@ -271,7 +323,7 @@ function initBackToTop() {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: var(--accent-orange, #f97316);
+        background: var(--accent-red, #dc2626);
         color: white;
         border: none;
         font-size: 1.5rem;
@@ -280,7 +332,7 @@ function initBackToTop() {
         visibility: hidden;
         transition: all 0.3s ease;
         z-index: 1000;
-        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     `;
     
     document.body.appendChild(backToTopBtn);
@@ -307,12 +359,12 @@ function initBackToTop() {
     // Efeito hover
     backToTopBtn.addEventListener('mouseenter', () => {
         backToTopBtn.style.transform = 'scale(1.1)';
-        backToTopBtn.style.boxShadow = '0 6px 20px rgba(249, 115, 22, 0.4)';
+        backToTopBtn.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.4)';
     });
 
     backToTopBtn.addEventListener('mouseleave', () => {
         backToTopBtn.style.transform = 'scale(1)';
-        backToTopBtn.style.boxShadow = '0 4px 12px rgba(249, 115, 22, 0.3)';
+        backToTopBtn.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.3)';
     });
 }
 
@@ -368,6 +420,20 @@ function animateCounter(element, target, duration = 2000) {
 }
 
 // Console personalizado
-console.log('%c🚀 Portfolio Raphael Del Rosse', 'font-size: 20px; color: #f97316; font-weight: bold;');
-console.log('%c💼 Desenvolvedor Back-End | Python & Django | AWS', 'font-size: 14px; color: #1e3a8a;');
-console.log('%c📧 rapharosseprofissional@gmail.com', 'font-size: 12px; color: #64748b;');
+console.log('%c🚀 Portfolio Raphael Del Rosse', 'font-size: 20px; color: #dc2626; font-weight: bold;');
+console.log('%c💼 Desenvolvedor Back-End | Python & Django | AWS', 'font-size: 14px; color: #f3f4f6;');
+console.log('%c📧 rapharosseprofissional@gmail.com', 'font-size: 12px; color: #9ca3af;');
+
+// Aula: Exemplo de Switch-case
+let dayOfWeek = new Date().getDay();
+let dayName = "";
+switch(dayOfWeek) {
+    case 0: dayName = "Domingo"; break;
+    case 1: dayName = "Segunda-feira"; break;
+    case 2: dayName = "Terça-feira"; break;
+    case 3: dayName = "Quarta-feira"; break;
+    case 4: dayName = "Quinta-feira"; break;
+    case 5: dayName = "Sexta-feira"; break;
+    case 6: dayName = "Sábado"; break;
+}
+console.log(`%cHoje é ${dayName}. Ótimo dia para programar!`, 'color: #dc2626; font-style: italic;');
