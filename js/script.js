@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initBackToTop();
     initDynamicForm();
     initGreeting();
+    initPageTransitions();
 });
 
 // ========================================
@@ -101,7 +102,7 @@ function initScrollAnimations() {
 
     // Elementos para animar
     const elementsToAnimate = document.querySelectorAll(
-        '.project-card, .hero-text, .hero-photo-box, .sobre-container, .contact-content'
+        '.project-card, .hero-text, .sobre-container, .contact-content'
     );
 
     elementsToAnimate.forEach(el => {
@@ -113,29 +114,48 @@ function initScrollAnimations() {
 }
 
 // ========================================
-// EFEITO DE DIGITAÇÃO - Página Inicial
+// EFEITO DE DIGITAÇÃO - Home e Sobre
 // ========================================
 function initTypingEffect() {
-    const subtitle = document.querySelector('.hero-subtitle');
-    
-    if (!subtitle) return;
+    // Seleciona os títulos e textos principais da Home e da página Sobre
+    const elements = document.querySelectorAll(
+        '.hero-text h1, .hero-subtitle, .hero-description p, ' +
+        '.sobre-container h1, .sobre-container p, .sobre-container ul li, .sobre-container h2'
+    );
 
-    const text = subtitle.textContent;
-    subtitle.textContent = '';
-    subtitle.style.opacity = '1';
-    
-    let index = 0;
-    
-    function type() {
-        if (index < text.length) {
-            subtitle.textContent += text.charAt(index);
-            index++;
-            setTimeout(type, 50);
-        }
-    }
-    
-    // Inicia após um pequeno delay
-    setTimeout(type, 500);
+    if (elements.length === 0) return;
+
+    elements.forEach((el, index) => {
+        const html = el.innerHTML;
+        el.innerHTML = '';
+        el.style.opacity = '1';
+        
+        let i = 0;
+        
+        setTimeout(() => {
+            function type() {
+                if (i < html.length) {
+                    // Se encontrar uma tag HTML, insere ela inteira de uma vez para não quebrar a formatação (ex: <strong>)
+                    if (html.charAt(i) === '<') {
+                        let tag = '';
+                        while (html.charAt(i) !== '>' && i < html.length) {
+                            tag += html.charAt(i);
+                            i++;
+                        }
+                        tag += '>';
+                        el.innerHTML += tag;
+                        i++;
+                        type(); // Processa o próximo caractere sem delay
+                    } else {
+                        el.innerHTML += html.charAt(i);
+                        i++;
+                        setTimeout(type, 15); // 15ms: Bem rápido para que textos longos fluam bem
+                    }
+                }
+            }
+            type();
+        }, 300 + (index * 250)); // Efeito cascata: começa o 1º em 300ms, o 2º em 550ms, etc.
+    });
 }
 
 // ========================================
@@ -437,3 +457,52 @@ switch(dayOfWeek) {
     case 6: dayName = "Sábado"; break;
 }
 console.log(`%cHoje é ${dayName}. Ótimo dia para programar!`, 'color: #dc2626; font-style: italic;');
+
+// ========================================
+// TRANSIÇÃO DE PÁGINAS (Efeito fade de vídeo)
+// ========================================
+function initPageTransitions() {
+    // Cria o elemento de overlay (cortina)
+    const overlay = document.createElement('div');
+    overlay.className = 'page-transition-overlay';
+    document.body.appendChild(overlay);
+
+    // Remove a cortina quando a página carrega
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.pointerEvents = 'none', 500);
+        }, 50);
+    });
+
+    // Intercepta os cliques nos links internos
+    const links = document.querySelectorAll('a[href]');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            const target = link.getAttribute('target');
+
+            // Ignora links externos, novas abas, links com âncora e contatos diretos
+            if (target === '_blank' || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) {
+                return;
+            }
+
+            e.preventDefault();
+            
+            // Ativa a cortina
+            overlay.style.pointerEvents = 'all';
+            overlay.style.opacity = '1';
+
+            // Redireciona a página após a animação de escurecimento (500ms)
+            setTimeout(() => window.location.href = href, 500);
+        });
+    });
+
+    // Corrige problema de tela preta caso o usuário use o botão de "Voltar" do navegador (bfcache)
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+        }
+    });
+}
