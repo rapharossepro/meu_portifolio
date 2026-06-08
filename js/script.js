@@ -6,13 +6,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     initNavbar();
     initScrollAnimations();
+    initGreeting();
     initTypingEffect();
     initProjectCards();
     initFormValidation();
     initSmoothScroll();
     initBackToTop();
     initDynamicForm();
-    initGreeting();
     initPageTransitions();
 });
 
