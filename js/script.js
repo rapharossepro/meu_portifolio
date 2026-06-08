@@ -197,23 +197,43 @@ function initFormValidation() {
     
     if (!form) return;
 
+    // Máscara de formatação automática para o campo de telefone
+    const telefoneInput = document.getElementById('telefone');
+    if (telefoneInput) {
+        telefoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não for número
+            if (value.length > 11) value = value.substring(0, 11); // Limita a 11 dígitos
+            
+            value = value.replace(/^(\d{2})(\d)/g, '($1) $2'); // Adiciona parênteses e espaço do DDD
+            value = value.replace(/(\d)(\d{4})$/, '$1-$2');    // Adiciona o hífen do número
+            
+            e.target.value = value;
+        });
+    }
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
         // Pega os valores dos campos
         const nome = document.getElementById('nome').value.trim();
         const email = document.getElementById('email').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
         const assunto = document.getElementById('assunto').value.trim();
         const mensagem = document.getElementById('mensagem').value.trim();
         
         // Validações
-        if (!nome || !email || !assunto || !mensagem) {
+        if (!nome || !email || !telefone || !assunto || !mensagem) {
             showNotification('Por favor, preencha todos os campos!', 'error');
             return;
         }
         
         if (!validateEmail(email)) {
             showNotification('Por favor, insira um email válido!', 'error');
+            return;
+        }
+        
+        if (!validatePhone(telefone)) {
+            showNotification('Por favor, insira um telefone válido com DDD!', 'error');
             return;
         }
         
@@ -242,6 +262,12 @@ function initFormValidation() {
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
+}
+
+// Valida se o número possui 10 (fixo) ou 11 (celular) dígitos numéricos
+function validatePhone(phone) {
+    const numbers = phone.replace(/\D/g, '');
+    return numbers.length >= 10 && numbers.length <= 11;
 }
 
 function showNotification(message, type) {
