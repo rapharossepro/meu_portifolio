@@ -59,7 +59,6 @@ O código JavaScript centralizado no `script.js` foi encapsulado e organizado em
 - **Email:** rapharosseprofissional@gmail.com
 - **LinkedIn:** [linkedin.com/in/raphaeldelrosse](https://www.linkedin.com/in/raphaeldelrosse/)
 - **GitHub:** [github.com/rapharossepro](https://github.com/rapharossepro)
-- **WhatsApp:** (21) 96975-4036
 
 ---
 
