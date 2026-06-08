@@ -88,10 +88,10 @@ header {
     max-width: 1200px;
     margin: 4rem auto;
     padding: 2rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 3rem;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
     background: var(--primary-dark);
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(220, 38, 38, 0.05);
@@ -195,45 +195,12 @@ header {
     transform: translateY(-2px);
 }
 
-.hero-photo-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hero-photo-box img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 50%;
-    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15);
-    border: 2px solid var(--accent-red);
-    transition: transform 0.3s ease;
-}
-
-.hero-photo-box img:hover {
-    transform: scale(1.05);
-}
-
 /* Página Sobre */
 .content {
     max-width: 1200px;
     margin: 4rem auto;
     padding: 2rem;
     position: relative;
-}
-
-.floating-photo {
-    float: right;
-    margin: 0 0 2rem 2rem;
-    shape-outside: circle(50%);
-}
-
-.floating-photo img {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15);
-    border: 2px solid var(--accent-red);
 }
 
 .sobre-container {
@@ -247,6 +214,13 @@ header {
 .sobre-container h1 {
     font-size: 2.5rem;
     margin-bottom: 2rem;
+    color: var(--text-main);
+}
+
+.sobre-container h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
     color: var(--text-main);
 }
 
@@ -288,36 +262,43 @@ header {
 }
 
 .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
 }
 
 .project-card {
+    display: flex;
+    flex-direction: row;
     background: var(--card-bg);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    border-top: 4px solid var(--accent-red);
+    border-left: 4px solid var(--accent-red);
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
+    transform: translateX(10px);
     box-shadow: 0 15px 40px rgba(220, 38, 38, 0.15);
     background: var(--card-bg-hover);
 }
 
 .project-image {
-    width: 100%;
-    height: 180px;
+    flex: 0 0 250px;
     background: linear-gradient(135deg, #000000 0%, #1a0000 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 3rem;
-    border-bottom: 1px solid #333;
+    font-size: 4rem;
+    border-right: 1px solid #333;
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .project-content {
@@ -500,7 +481,6 @@ footer {
 /* Responsividade */
 @media (max-width: 768px) {
     .hero-container {
-        grid-template-columns: 1fr;
         text-align: center;
     }
 
@@ -527,17 +507,6 @@ footer {
         text-align: center;
     }
 
-    .hero-photo-box img {
-        max-width: 200px;
-    }
-
-    .floating-photo {
-        float: none;
-        margin: 0 auto 2rem;
-        display: block;
-        text-align: center;
-    }
-
     .nav-links {
         gap: 1rem;
         font-size: 0.9rem;
@@ -549,6 +518,74 @@ footer {
     }
 
     .projects-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-card {
+        flex-direction: column;
+        border-left: none;
+        border-top: 4px solid var(--accent-red);
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .project-image {
+        flex: 0 0 150px;
+        border-right: none;
+        border-bottom: 1px solid #333;
+    }
+}
+
+/* ========================================
+   TRANSIÇÃO DE PÁGINAS (Overlay Fade)
+   ======================================== */
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--secondary-dark); /* Cor de fundo para mesclar com o site */
+    z-index: 99999; /* Fica acima de tudo, inclusive navbar */
+    pointer-events: all;
+    opacity: 1; /* Começa visível no carregamento */
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* ========================================
+   FOTO DE PERFIL FIXA NA LATERAL ESQUERDA
+   ======================================== */
+.fixed-profile-left {
+    position: fixed;
+    left: 20px;
+    top: 15%; /* Movido mais ao topo */
+    width: 220px; /* Tamanho aumentado */
+    z-index: 999;
+    border: 4px solid var(--accent-red);
+    border-radius: 50%; /* Moldura oval/circular */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: transform 0.3s ease, width 0.3s ease;
+    background: var(--primary-dark);
+}
+
+.fixed-profile-left img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.fixed-profile-left:hover {
+    transform: scale(1.05); /* Animação de zoom ao passar o mouse */
+}
+
+@media (max-width: 768px) {
+    .fixed-profile-left {
+        width: 120px; /* Tamanho mobile também aumentado */
+        border-width: 2px;
+        left: 10px;
     }
 }
