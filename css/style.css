@@ -569,7 +569,7 @@ footer {
     position: fixed;
     left: 20px;
     top: 15%; /* Movido mais ao topo */
-    width: 220px; /* Tamanho aumentado */
+    width: 320px; /* Tamanho aumentado */
     z-index: 999;
     border: 4px solid var(--accent-red);
     border-radius: 50%; /* Moldura oval/circular */
