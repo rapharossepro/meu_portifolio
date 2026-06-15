@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initBackToTop();
     initDynamicForm();
     initPageTransitions();
+    initWelcomePopup();
 });
 
 // ========================================
@@ -463,6 +464,59 @@ function animateCounter(element, target, duration = 2000) {
             element.textContent = Math.floor(start);
         }
     }, 16);
+}
+
+// ========================================
+// POPUP DE BOAS VINDAS (Ao carregar o site)
+// ========================================
+function initWelcomePopup() {
+    // Usa sessionStorage para exibir o popup apenas UMA vez por sessão
+    if (sessionStorage.getItem('welcomePopupShown')) return;
+    sessionStorage.setItem('welcomePopupShown', 'true');
+
+    // Aguarda a transição de entrada da página terminar (800ms) para não sobrecarregar a tela visualmente
+    setTimeout(() => {
+        // 1. Cria o fundo escuro (Overlay)
+        const overlay = document.createElement('div');
+        overlay.id = 'custom-welcome-overlay';
+        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 99998; backdrop-filter: blur(4px);';
+        
+        // 2. Cria a caixa do Popup Flutuante
+        const popup = document.createElement('div');
+        popup.id = 'custom-welcome-popup';
+        popup.style.cssText = `
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: var(--card-bg, #1e293b); 
+            padding: 2.5rem; 
+            border-radius: 15px; 
+            border: 2px solid var(--accent-red, #dc2626);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5); 
+            z-index: 99999; 
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        `;
+
+        // Injeta o conteúdo HTML do popup
+        popup.innerHTML = `
+            <h2 style="color: var(--text-main, #f8fafc); margin-bottom: 1rem; font-size: 1.8rem;">Olá! 🚀</h2>
+            <p style="color: var(--text-muted, #94a3b8); margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">Bem-vindo(a) ao meu portfólio profissional.</p>
+            <button id="close-welcome-btn" style="background: var(--accent-red, #dc2626); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer;">Fechar</button>
+        `;
+
+        // 3. Adiciona os elementos à tela
+        document.body.appendChild(overlay);
+        document.body.appendChild(popup);
+
+        // 4. Adiciona evento para fechar e remover os elementos
+        const closePopup = () => { popup.remove(); overlay.remove(); };
+        document.getElementById('close-welcome-btn').addEventListener('click', closePopup);
+        overlay.addEventListener('click', closePopup);
+    }, 800);
 }
 
 // Console personalizado
